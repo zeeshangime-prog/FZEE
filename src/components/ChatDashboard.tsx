@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { ChatMessage } from "@/components/ChatMessage";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,7 @@ const MODES: { id: ChatMode; label: string; icon: typeof Code; desc: string }[] 
 
 export function ChatDashboard() {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -255,7 +257,13 @@ export function ChatDashboard() {
               {MODES.map((m) => (
                 <button
                   key={m.id}
-                  onClick={() => setMode(m.id)}
+                  onClick={() => {
+                    if (m.id === "app") {
+                      navigate("/app-builder");
+                    } else {
+                      setMode(m.id);
+                    }
+                  }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                     mode === m.id
                       ? "gradient-primary text-primary-foreground shadow-glow"
